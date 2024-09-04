@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # React + TypeScript + Vite
+=======
+# Getting Started with Create React App
+>>>>>>> ab281aa9d64d05a9608c7bb4b0f2181b562216c5
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
