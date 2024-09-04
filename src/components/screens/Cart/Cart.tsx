@@ -79,7 +79,7 @@ const Cart: React.FC = () => {
                 ))}
               </ul>
               <br></br>
-              <p className="text-lg font-semibold mt-2" id="totalquantity" >Total: Rs {calculateTotal().toFixed(2)}</p>
+              <p className="text-lg font-semibold mt-2" id="totalquantity"  >Total: Rs {calculateTotal().toFixed(2)}</p>
             </div>
             <div className="checkout">
               <button className="bg-green-500 text-white px-4 py-2 rounded mt-2">
