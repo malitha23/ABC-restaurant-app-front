@@ -7,24 +7,28 @@ import { motion } from 'framer-motion';
 import ConfirmDialog from '../DialogBox/confirmDialog';
 import OverlayPanel from '../OverlayPanel/OverlayPanel';
 import { toast, ToastContainer } from 'react-toastify';
+import { useCartContext } from '../context/CartContext';  // Import the Cart Context
+import Swal from 'sweetalert2';
 
 interface User {
     id: number;
     username: string;
     first_name: string;
     last_name: string;
+    email: string;
     phone_number: string;
     address: string;
     role: string;
 }
 
- 
+
 interface NavMenuItem {
     id: number;
     title: string;
     path: string;
     delay: number;
 }
+
 
 const NavMenu: NavMenuItem[] = [
     {
@@ -57,6 +61,12 @@ const NavMenu: NavMenuItem[] = [
         path: '/contact',
         delay: 0.5,
     },
+    {
+        id: 6,
+        title: 'Reservation',
+        path: '/reservation',
+        delay: 0.6,
+    },
 ];
 
 const SlideDown = (delay: number): Variants => ({
@@ -81,6 +91,11 @@ const Navbar: React.FC = () => {
     const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null); // Store user data
 
+    const { cartItems } = useCartContext(); // Get cart items from context
+
+    // Calculate total quantity of items in the cart
+    const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
     // Check if a user token exists on component mount
     useEffect(() => {
         const token = localStorage.getItem('userToken'); // Replace 'userToken' with your actual token key
@@ -102,9 +117,7 @@ const Navbar: React.FC = () => {
         navigate('/cart'); // Navigate to the cart page
     };
 
-    const handleLogoutClick = () => {
-        setDialogOpen(true); // Open the confirmation dialog
-    };
+
 
     const handleCloseDialog = () => {
         setDialogOpen(false); // Close the confirmation dialog
@@ -112,6 +125,7 @@ const Navbar: React.FC = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('userToken');
+        localStorage.removeItem('user');
         setIsLoggedIn(false);
         setDialogOpen(false);
         setOverlayVisible(false);
@@ -119,6 +133,23 @@ const Navbar: React.FC = () => {
         setTimeout(() => {
             window.location.href = '/';
         }, 1000);
+    };
+
+    const handleGoToDashboard = () => {
+        setOverlayVisible(false);
+        toast.success('Welcome To Dashboard!');
+        setTimeout(() => {
+            if (user) {
+                if (user.role == 'user') {
+                    navigate('/user');
+                }else if (user.role == 'admin') {
+                    navigate('/admin');
+                }else if (user.role == 'staff') {
+                    navigate('/staff');
+                }
+            }
+        }, 1000);
+
     };
 
     const handleOpenOverlay = () => {
@@ -140,23 +171,45 @@ const Navbar: React.FC = () => {
                 />
                 <div className='hidden md:block'>
                     <ul className='flex gap-6'>
-                        {NavMenu.map((menu) => (
-                            <motion.li
-                                key={menu.id}
-                                variants={SlideDown(menu.delay)}
-                                initial="initial"
-                                animate="animate"
-                                className='nav-menu'
-                                data-delay={menu.delay}
-                            >
-                                <Link
-                                    to={menu.path}
-                                    className='inline-block px-2 py-2 text-2xl'
-                                >
-                                    {menu.title}
-                                </Link>
-                            </motion.li>
-                        ))}
+                    {NavMenu.map((menu) => (
+    <motion.li
+        key={menu.id}
+        variants={SlideDown(menu.delay)}
+        initial="initial"
+        animate="animate"
+        className='nav-menu'
+        data-delay={menu.delay}
+    >
+        {menu.title === 'Reservation' ? (
+            <button
+                onClick={() => {
+                    if (!isLoggedIn) {
+                        // Show SweetAlert prompting the user to log in
+                        Swal.fire({
+                            title: 'Please log in',
+                            text: 'You need to log in to make a reservation',
+                            icon: 'warning',
+                            confirmButtonText: 'OK',
+                        });
+                    } else {
+                        navigate(menu.path); // Navigate to the reservation page
+                    }
+                }}
+                className='inline-block px-2 py-2 text-2xl'
+            >
+                {menu.title}
+            </button>
+        ) : (
+            <Link
+                to={menu.path}
+                className='inline-block px-2 py-2 text-2xl'
+            >
+                {menu.title}
+            </Link>
+        )}
+    </motion.li>
+))}
+
                     </ul>
                 </div>
                 <motion.div
@@ -164,10 +217,15 @@ const Navbar: React.FC = () => {
                     animate="animate"
                     className="flex space-x-2"
                 >
-                    <button className='h-[40px] w-[40px] grid place-items-center rounded-full text-white bg-dark'
+                    <button className='h-[40px] w-[40px] grid place-items-center rounded-full text-white bg-dark relative'
                         onClick={handlecartClick}
                     >
                         <IoCartOutline />
+                        {totalCartItems > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 grid place-items-center">
+                                {totalCartItems}
+                            </span>
+                        )}
                     </button>
 
                     {isLoggedIn ? (
@@ -202,7 +260,7 @@ const Navbar: React.FC = () => {
             {/* Custom Overlay Panel */}
             <OverlayPanel open={overlayVisible} onClose={handleCloseOverlay}>
                 {user && (
-                   <div className="user-info">
+                    <div className="user-info">
                         <h2>{user.username}</h2>
                         <p><strong>Full Name:</strong> {user.first_name} {user.last_name}</p>
                         <p><strong>Phone Number:</strong> {user.phone_number}</p>
@@ -215,9 +273,16 @@ const Navbar: React.FC = () => {
                         >
                             Logout
                         </button>
+                        <button
+                            className="px-4 py-2 rounded-full text-white bg-blue-500 ml-4"
+                            onClick={handleGoToDashboard}
+                        >
+                            Go to Dashboard
+                        </button>
                     </div>
                 )}
             </OverlayPanel>
+
             <ToastContainer />
         </nav>
     );

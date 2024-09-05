@@ -1,20 +1,11 @@
 import React from 'react';
+import Navbar from '../../Navbar/Navbar';
+
 
 const Contact: React.FC = () => {
     return (
         <div className="contact-container">
-            {/* Header Section */}
-            <header className="header flex justify-between items-center p-4 bg-white shadow">
-                <img src="/path/to/logo.png" alt="Logo" className="w-20" />
-                <nav className="nav-links">
-                    <ul className="flex space-x-4">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/menu">Menu</a></li>
-                        <li><a href="/delivery">Delivery</a></li>
-                    </ul>
-                </nav>
-            </header>
+             <Navbar />
 
             {/* Contact Us Section */}
             <section className="contact-us p-8 bg-gray-100">

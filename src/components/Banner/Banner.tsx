@@ -1,8 +1,15 @@
 import Sushi from "../../assets/sushi-pallet.png";
 import { motion } from 'framer-motion';
 import {SlideUp} from '../Hero/Hero';
+import {  useNavigate } from 'react-router-dom';
 
 const Banner = () => {
+
+    const navigate = useNavigate();
+
+    const handleOrderNowClick = () => {
+        navigate('/menu');
+    };
   return (
     <section>
         <div className="container py-24">
@@ -40,7 +47,7 @@ Celebrate the Festival Season with our special offer! Enjoy delicious discounts 
                     variants={SlideUp(1.6)}
                     initial="hidden"
                     whileInView="show"
-                    className="btn-primary">
+                    className="btn-primary" onClick={handleOrderNowClick}>
                         Order Now
                     </motion.button>
                 </div>

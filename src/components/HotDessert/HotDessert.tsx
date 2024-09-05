@@ -17,21 +17,21 @@ const HotDessertData: HotDessertItem[] = [
         id: 1,
         name: "Chicken Ramen",
         img: Recipe1,
-        price: "$5.99",
+        price: "Rs 500.99",
         delay: 0.4
     },
     {
         id: 2,
         name: "Sushi",
         img: Recipe2,
-        price: "$5.00",
+        price: "Rs 400.00",
         delay: 0.8
     },
     {
         id: 3,
         name: "Tteokbokki",
         img: Recipe3,
-        price: "$5.99",
+        price: "Rs 380.99",
         delay: 1.2
     },
 ];

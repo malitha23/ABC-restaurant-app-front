@@ -2,8 +2,15 @@ import BannerPng from "../../assets/banner.png";
 import Sushi from "../../assets/sushi-pallet.png";
 import { motion } from 'framer-motion';
 import {SlideUp} from '../Hero/Hero';
+import { useNavigate } from 'react-router-dom';
 
 const Testimonial = () => {
+
+    const navigate = useNavigate();
+
+    const handleOrderNowClick = () => {
+        navigate('/menu');
+    };
   return (
     <section>
         <div className="container py-24">
@@ -27,7 +34,7 @@ const Testimonial = () => {
                     variants={SlideUp(1.6)}
                     initial="hidden"
                     whileInView="show"
-                    className="btn-primary">
+                    className="btn-primary" onClick={handleOrderNowClick}>
                         Order Now
                     </motion.button>
                 </div>

@@ -5,6 +5,7 @@ import Chili from "../../assets/chili.png";
 import { IoCartOutline } from 'react-icons/io5';
 import { motion } from 'framer-motion';
 import { Variants } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 export const SlideUp = (delay: number): Variants => {
     return {
@@ -24,6 +25,12 @@ export const SlideUp = (delay: number): Variants => {
 };
 
 export const Hero = () => {
+
+    const navigate = useNavigate();
+
+    const handleOrderNowClick = () => {
+        navigate('/menu');
+    };
   return (
     <main>
         <div className="container min-h-[600px] flex justify-center relative z-10">
@@ -53,7 +60,9 @@ export const Hero = () => {
                         variants={SlideUp(2)}
                         initial="hidden"
                         whileInView="show"
-                        className='btn-primary inline-block !mt-10'>
+                        className='btn-primary inline-block !mt-10'
+                        onClick={handleOrderNowClick}
+                        >
                         <IoCartOutline className='inline mr-2' /> 
                         Order Now
                     </motion.button>

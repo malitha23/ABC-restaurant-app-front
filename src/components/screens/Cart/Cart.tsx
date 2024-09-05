@@ -2,8 +2,10 @@ import React from 'react';
 import { useCartContext } from '../../context/CartContext';
 import Navbar from '../../Navbar/Navbar';
 import './Cart.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
 
 const Cart: React.FC = () => {
+  const navigate = useNavigate();
   const { cartItems, addToCart, removeFromCart } = useCartContext();
 
   const calculateTotal = () => {
@@ -22,6 +24,23 @@ const Cart: React.FC = () => {
     }
   };
 
+  const handleProceedToCheckout = () => {
+    const storedUser = localStorage.getItem('user'); // Retrieve the JSON string
+
+    if (storedUser) {
+        const user = JSON.parse(storedUser); // Parse the JSON string
+        console.log('Proceeding to Checkout with User:', user);
+
+        // Redirect to checkout page with user and cart data
+        navigate('/checkout', { state: { user: user, cartItems: cartItems } });
+
+    } else {
+        console.log('No user data found. Redirecting to login...');
+        // Redirect to login page
+        navigate('/login');
+    }
+};
+
   return (
     <div className="cart-container">
       <Navbar />
@@ -31,7 +50,7 @@ const Cart: React.FC = () => {
           {cartItems.length === 0 ? (
             <p>Your cart is empty</p>
           ) : (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-1">
               {cartItems.map((item) => (
                 <div key={item.id} className="cart-item border p-4 rounded-lg shadow-md">
                   <img
@@ -39,6 +58,7 @@ const Cart: React.FC = () => {
                     alt={`${item.name} Image`}
                     className="w-full h-32 object-cover rounded-md"
                   />
+                    <div className="mt-4 w-full">
                   <h4 className="text-lg font-semibold mt-2">{item.name}</h4>
                   <p className="text-gray-600">Rs {item.price}</p>
                   <p className="text-gray-600">Quantity: {item.quantity}</p>
@@ -61,6 +81,7 @@ const Cart: React.FC = () => {
                     >
                       Remove
                     </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -82,7 +103,7 @@ const Cart: React.FC = () => {
               <p className="text-lg font-semibold mt-2" id="totalquantity"  >Total: Rs {calculateTotal().toFixed(2)}</p>
             </div>
             <div className="checkout">
-              <button className="bg-green-500 text-white px-4 py-2 rounded mt-2">
+              <button className="bg-green-500 text-white px-4 py-2 rounded mt-2" onClick={handleProceedToCheckout} >
                 Proceed to Checkout
               </button>
             </div>

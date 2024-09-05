@@ -50,13 +50,27 @@ const RegisterPage = () => {
                 // Save the token and user data in localStorage
                 localStorage.setItem('userToken', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+                // Convert the JavaScript object to a JSON string
+                const jsonString = JSON.stringify(data.user);
 
+                // Parse the JSON string back into a JavaScript object
+                const parsedUser = JSON.parse(jsonString);
+
+                // Access the role property
+                const userRole = parsedUser.role;
                 setSuccess('Registration successful! You can now log in.');
                 toast.success('Registration successful! You can now log in.');
 
                 // Redirect to the login page
                 setTimeout(() => {
-                    navigate('/');
+                    if (userRole == 'user') {
+                        window.location.href = '/user';
+                    } else if (userRole == 'admin') {
+                        window.location.href = '/admin';
+                    } else if (userRole == 'staff') {
+                        window.location.href = '/staff';
+                    }
+
                 }, 1000);
             } else {
                 const errorData = await response.json();

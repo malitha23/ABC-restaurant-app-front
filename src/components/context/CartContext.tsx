@@ -27,22 +27,8 @@ export const useCartContext = () => {
 
 // Save cart data to local storage
 const saveCartToLocalStorage = (cartItems: CartItem[]) => {
-  console.log(cartItems.length);
-  if (cartItems.length === 1) {
-    Swal.fire({
-      title: 'Save Cart Data?',
-      text: 'You are not logged in. Do you want to save the cart data please login?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, login',
-      cancelButtonText: 'No, cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Redirect to login or handle the case accordingly
-        window.location.href = '/login';
-      }
-    });
-  }
+
+
   const userToken = localStorage.getItem('userToken');
 
   if (userToken) {
@@ -51,6 +37,21 @@ const saveCartToLocalStorage = (cartItems: CartItem[]) => {
     const key = `${userToken}_cart`; // Construct the key with userToken
     localStorage.setItem(key, JSON.stringify(cartItems));
   } else {
+    if (cartItems.length === 1) {
+      Swal.fire({
+        title: 'Save Cart Data?',
+        text: 'You are not logged in. Do you want to save the cart data please login?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, login',
+        cancelButtonText: 'No, cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to login or handle the case accordingly
+          window.location.href = '/login';
+        }
+      });
+    }
     const key = `_cart`; // Construct the key with userToken
     sessionStorage.setItem(key, JSON.stringify(cartItems));
   }

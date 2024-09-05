@@ -26,11 +26,26 @@ const LoginPage = () => {
                 // Save the token and user data in localStorage
                 localStorage.setItem('userToken', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+                // Convert the JavaScript object to a JSON string
+                const jsonString = JSON.stringify(data.user);
+
+                // Parse the JSON string back into a JavaScript object
+                const parsedUser = JSON.parse(jsonString);
+
+                // Access the role property
+                const userRole = parsedUser.role;
 
                 // Show success toast and redirect
                 toast.success('Login successful!');
                 setTimeout(() => {
-                    window.location.href = '/';
+                    if (userRole == 'user') {
+                        window.location.href = '/user';
+                    }else if (userRole == 'admin') {
+                        window.location.href = '/admin';
+                    }else if (userRole == 'staff') {
+                        window.location.href = '/staff';
+                    }
+
                 }, 1000);
             } else {
                 setError('Invalid username or password');
